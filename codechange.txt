@@ -1,0 +1,141 @@
+Cherry Studio 窗口置顶功能实现总结
+
+1. 主进程修改 (WindowService.ts)
+// 新增方法
+public toggleAlwaysOnTop(): boolean {
+  if (!this.mainWindow) return false
+  const isAlwaysOnTop = !this.mainWindow.isAlwaysOnTop()
+  this.mainWindow.setAlwaysOnTop(isAlwaysOnTop)
+  return isAlwaysOnTop
+}
+
+2. IPC 通信处理 (ipc.ts)
+// 新增 IPC 处理器
+ipcMain.handle('window:toggle-always-on-top', () => {
+  return windowService.toggleAlwaysOnTop()
+})
+
+3. 预加载脚本修改
+preload/index.ts
+window: {
+  setMinimumSize: (width: number, height: number) => ipcRenderer.invoke('window:set-minimum-size', width, height),
+  resetMinimumSize: () => ipcRenderer.invoke('window:reset-minimum-size'),
+  toggleAlwaysOnTop: () => ipcRenderer.invoke('window:toggle-always-on-top')
+}
+
+preload/index.d.ts
+window: {
+  setMinimumSize: (width: number, height: number) => Promise<void>
+  resetMinimumSize: () => Promise<void>
+  toggleAlwaysOnTop: () => Promise<boolean>  // 新增类型定义
+}
+
+4. 渲染进程修改
+Navbar.tsx
+// 导入修改
+import { FormOutlined, PushpinOutlined, SearchOutlined } from '@ant-design/icons'
+import { FC, useState } from 'react'  // 新增 useState 导入
+
+// 新增状态
+const [isPinned, setIsPinned] = useState(false)
+
+// 新增按钮
+<NarrowIcon
+  onClick={async () => {
+    const newPinned = await window.api.window.toggleAlwaysOnTop()
+    setIsPinned(newPinned)
+  }}>
+  <PushpinOutlined style={{ color: isPinned ? 'var(--color-primary)' : 'var(--color-icon)' }} />
+</NarrowIcon>
+
+MinApp/index.tsx
+// 导入修改
+import { CloseOutlined, ExportOutlined, ReloadOutlined, PushpinOutlined } from '@ant-design/icons'
+
+// 新增状态
+const [isPinned, setIsPinned] = useState(false)
+
+// 新增方法
+const onTogglePin = async () => {
+  const newPinned = await window.api.window.toggleAlwaysOnTop()
+  setIsPinned(newPinned)
+}
+
+// 新增按钮
+<Button onClick={onTogglePin} className={isPinned ? 'active' : ''}>
+  <PushpinOutlined />
+</Button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -233,6 +233,13 @@ export class WindowService {
       this.createMainWindow()
     }
   }
+
+  public toggleAlwaysOnTop(): boolean {
+    if (!this.mainWindow) return false
+    const isAlwaysOnTop = !this.mainWindow.isAlwaysOnTop()
+    this.mainWindow.setAlwaysOnTop(isAlwaysOnTop)
+    return isAlwaysOnTop
+  }
 }
 
 export const windowService = WindowService.getInstance()

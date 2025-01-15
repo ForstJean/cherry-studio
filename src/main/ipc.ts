@@ -170,6 +170,10 @@ export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
     }
   })
 
+  ipcMain.handle('window:toggle-always-on-top', () => {
+    return windowService.toggleAlwaysOnTop()
+  })
+
   // gemini
   ipcMain.handle('gemini:upload-file', GeminiService.uploadFile)
   ipcMain.handle('gemini:base64-file', GeminiService.base64File)

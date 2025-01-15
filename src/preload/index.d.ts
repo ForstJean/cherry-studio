@@ -81,6 +81,7 @@ declare global {
       window: {
         setMinimumSize: (width: number, height: number) => Promise<void>
         resetMinimumSize: () => Promise<void>
+        toggleAlwaysOnTop: () => Promise<boolean>
       }
       gemini: {
         uploadFile: (file: FileType, apiKey: string) => Promise<UploadFileResponse>

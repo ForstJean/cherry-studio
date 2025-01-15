@@ -74,7 +74,8 @@ const api = {
   },
   window: {
     setMinimumSize: (width: number, height: number) => ipcRenderer.invoke('window:set-minimum-size', width, height),
-    resetMinimumSize: () => ipcRenderer.invoke('window:reset-minimum-size')
+    resetMinimumSize: () => ipcRenderer.invoke('window:reset-minimum-size'),
+    toggleAlwaysOnTop: () => ipcRenderer.invoke('window:toggle-always-on-top')
   },
   gemini: {
     uploadFile: (file: FileType, apiKey: string) => ipcRenderer.invoke('gemini:upload-file', file, apiKey),

@@ -1,4 +1,4 @@
-import { FormOutlined, SearchOutlined } from '@ant-design/icons'
+import { FormOutlined, PushpinOutlined, SearchOutlined } from '@ant-design/icons'
 import { Navbar, NavbarLeft, NavbarRight } from '@renderer/components/app/Navbar'
 import { HStack } from '@renderer/components/Layout'
 import MinAppsPopover from '@renderer/components/Popups/MinAppsPopover'
@@ -13,7 +13,7 @@ import { EVENT_NAMES, EventEmitter } from '@renderer/services/EventService'
 import { useAppDispatch } from '@renderer/store'
 import { setNarrowMode } from '@renderer/store/settings'
 import { Assistant, Topic } from '@renderer/types'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import styled from 'styled-components'
 
 import SelectModelButton from './components/SelectModelButton'
@@ -28,6 +28,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant }) => {
   const { assistant } = useAssistant(activeAssistant.id)
   const { showAssistants, toggleShowAssistants } = useShowAssistants()
   const { topicPosition, sidebarIcons, narrowMode } = useSettings()
+  const [isPinned, setIsPinned] = useState(false)
   const { showTopics, toggleShowTopics } = useShowTopics()
   const dispatch = useAppDispatch()
 
@@ -79,6 +80,13 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant }) => {
         <HStack alignItems="center" gap={8}>
           <NarrowIcon onClick={() => SearchPopup.show()}>
             <SearchOutlined />
+          </NarrowIcon>
+          <NarrowIcon
+            onClick={async () => {
+              const newPinned = await window.api.window.toggleAlwaysOnTop()
+              setIsPinned(newPinned)
+            }}>
+            <PushpinOutlined style={{ color: isPinned ? 'var(--color-primary)' : 'var(--color-icon)' }} />
           </NarrowIcon>
           <NarrowIcon onClick={() => dispatch(setNarrowMode(!narrowMode))}>
             <i className="iconfont icon-icon-adaptive-width"></i>

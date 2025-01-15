@@ -31,7 +31,7 @@ window: {
 }
 
 4. 渲染进程修改
-Navbar.tsx
+home/Navbar.tsx
 // 导入修改
 import { FormOutlined, PushpinOutlined, SearchOutlined } from '@ant-design/icons'
 import { FC, useState } from 'react'  // 新增 useState 导入
